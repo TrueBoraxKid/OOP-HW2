@@ -25,7 +25,7 @@ import java.util.*;
 			- 
 	- USER CAN: 
 		- User has no access to data structures
-		- All interfacing by lables only
+		- All interfacing by labels only
 		- 
 		- user can: 
 			- create Graph by Label, init it empty 
@@ -53,20 +53,23 @@ import java.util.*;
 public class BipartiteGraph<T> {
 		
 		private Map<T, Node<T>> nodes;
-		private T graphLabel;
+		//private T graphLabel;
 		
 		/**
 		 * 
 		 * @param graphLabel
 		 */
-		public BipartiteGraph(T graphLabel){
-			nodes = new HashMap<T, Node<T>>();
-			edges = new HashMap<T, Edge<T>>();
-			this.graphLabel = graphLabel; // TODO clone? copy constructor?
-			
-			
+		public BipartiteGraph(){
+			this.nodes = new HashMap<T, Node<T>>();
+			//this.graphLabel = graphLabel; // TODO clone? copy constructor?
 			//TODO checkRep();
 			
+		}
+		
+		public BipartiteGraph(T graphLabel){
+			this.nodes = new HashMap<T, Node<T>>();
+			//this.graphLabel = graphLabel; // TODO clone? copy constructor?
+			//TODO checkRep();
 		}
 		
 		
@@ -90,17 +93,48 @@ public class BipartiteGraph<T> {
 		 * @param edgeLabel
 		 * @param childLabel
 		 * @param parentLabel
+		 * @throws Exception 
 		 */	
-		public void addEdge(T edgeLabel, T childLabel, T parentLabel){		
+		public void addEdge(T edgeLabel, T childLabel, T parentLabel) throws Exception{
+			Node<T> parent	= this.getNodeByLabel(parentLabel);
+			Node<T> child 	= this.getNodeByLabel(childLabel);
+			
+			if(parent.hasOutEdge(edgeLabel)) 	throw new Exception("Parent " + parentLabel + " already has outgoing edge " + edgeLabel);
+			if(child.hasInEdge(edgeLabel)) 		throw new Exception("Child " + childLabel + " already has ingoing edge " + edgeLabel);
+			if(parent.getType() == child.getType()) throw new Exception(parent + " and " + child + " have same type"); 
+			Edge<T> edge = new Edge<T>(edgeLabel, childLabel, parentLabel);
+			
+			parent.addOutEdge(edgeLabel, edge);
 		}
 		
-		
+		 /**
+		  * 
+		  * @return List<T> of labels for all nodes in the graph
+		  */
 		public List<T> getNodes(){
 			Set<T> keySet 	= this.nodes.keySet();
 			List<T> keyList = new ArrayList<T>(keySet);
 			return keyList;
 		}
 		
+		
+		/**
+		 * 
+		 * @param type
+		 * @return List of labels of nodes filtered by type
+		 */
+		public List<T> getNodesByType(int type){
+			Set<T> keySet 	= this.nodes.keySet();
+			List<T> keyList = new ArrayList<T>(keySet);
+			
+			for (Iterator<T> i = keyList.iterator(); i.hasNext();) {
+				T key = i.next();
+				Node<T> node = this.nodes.get(key);
+				if(node.getType() != type) i.remove(); 
+			}
+			
+			return keyList;
+		}
 		
 		/**
 		 * 
@@ -119,67 +153,91 @@ public class BipartiteGraph<T> {
 		 * 
 		 * @param nodeLabel
 		 * @return
+		 * @throws Exception 
 		 */
-		public List<T> getNodeInEdges		(T nodeLabel){
+		public List<T> getNodeInEdges		(T nodeLabel) throws Exception{
 			Node<T> node = this.getNodeByLabel(nodeLabel);
-			List<T> inEdges = node.getInEdgesList();		
-			return inEdges;
+			List<Edge<T>> inEdges = node.getInEdgesList();
+			List<T> edges = new ArrayList<T>();
+			for(Edge<T> edge: inEdges) {
+				edges.add(edge.getLabel());
+			}
+			return edges;
 		}
 		
 		/**
 		 * 
 		 * @param nodeLabel
 		 * @return
+		 * @throws Exception 
 		 */
-		public List<T> getNodeOutEdges		(T nodeLabel){
+		public List<T> getNodeOutEdges		(T nodeLabel) throws Exception{
 			Node<T> node = this.getNodeByLabel(nodeLabel);
-			List<T> outEdges = node.getOutEdgesList();		
-			return outEdges;
+			List<Edge<T>> outEdges = node.getOutEdgesList();
+			List<T> edges = new ArrayList<T>();
+			for(Edge<T> edge: outEdges) {
+				edges.add(edge.getLabel());
+			}
+			return edges;
 		}	 
 		
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return
+		 * @return List of all immediate children for nodeLabel.
 		 */
-		public List<T> getNodeChildNodes	(T nodeLabel){
-			return null;
+		public List<T> getNodeChildren	(T nodeLabel){
+			Node<T> node = this.nodes.get(nodeLabel);
+			List<T> children = new ArrayList<T>();
+			for ( Edge<T> edge: node.getOutEdgesList()) {				
+				children.add(edge.getChildNode());
+			}
+			return children;
 		}  
 		
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return
+		 * @return List of all immediate parents for nodeLabel
 		 */
-		public List<T> getNodeParentNodes	(T nodeLabel){
-			return null;
+		public List<T> getNodeParents	(T nodeLabel){
+			Node<T> node = this.nodes.get(nodeLabel);
+			List<T> parents = new ArrayList<T>();
+			for ( Edge<T> edge: node.getInEdgesList()) {				
+				parents.add(edge.getParentNode());
+			}
+			return parents;
 		} 
 		
 		/**
 		 * 
 		 * @param edgeLabel
 		 * @return
+		 * @throws Exception 
 		 */
-		public T getEdgeChildNode	(T parentLabel, T edgeLabel){
+		public T getEdgeChildNode	(T parentLabel, T edgeLabel) throws Exception{
 			Node<T> node = this.getNodeByLabel(parentLabel);
 			Edge<T> edge = node.getOutEdge(edgeLabel);
 			T child = edge.getChildNode();
 			return child;
 		}	 
 		
-		//Not needed since edge access is through parentNode or childNode only
-		////**
-		/// * 
-		/// * @param edgeLabel
-		/// * @return
-		/// */
-		///public List<T> getEdgeParentNode	(T edgeLabel){
-		///	return null;
-		///}
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @return
+		 * @throws Exception 
+		*/
+		public T getEdgeParentNode	(T childLabel, T edgeLabel) throws Exception{
+			Node<T> node = this.getNodeByLabel(childLabel);
+			Edge<T> edge = node.getInEdge(edgeLabel);
+			T parent = edge.getParentNode();
+			return parent;
+		}
 		
 		//TODO Override toString
 		
-		private Node<T> getNodeByLabel(T nodeLabel) {
+		private Node<T> getNodeByLabel(T nodeLabel) throws Exception {
 			if (!this.nodes.containsKey(nodeLabel)) {
 				//TODO custom Exceptions?
 				throw new Exception("No such label: "+ nodeLabel );
@@ -191,27 +249,5 @@ public class BipartiteGraph<T> {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
 	
 }

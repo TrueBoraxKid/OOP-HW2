@@ -1,5 +1,7 @@
 package homework2;
 
+import java.util.*;
+
 //import static org.junit.Assert.*;
 //import org.junit.Test;
 
@@ -51,6 +53,8 @@ public class Node<T> {
 				this.type = 1;
 			}
 			
+			this.inEdges = new HashMap <T, Edge<T>>();
+			this.outEdges = new HashMap <T, Edge<T>>(); 
 			//TODO checkRep
 		}
 		
@@ -58,19 +62,25 @@ public class Node<T> {
 			return this.type;
 		}
 		
-		public List<T> getInEdgesList(){
-			Set<T> keySey = this.inEdges.keySet();
-			List<T> keyList = new ArrayList<T>(keySet);
-			return keyList;
+		public void addInEdge(T edgeLabel, Edge<T> edge) {
+			this.inEdges.put(edgeLabel, edge);
 		}
 		
-		public List<T> getOutEdgesList(){
-			Set<T> keySey = this.outEdges.keySet();
-			List<T> keyList = new ArrayList<T>(keySet);
-			return keyList;
+		public void addOutEdge(T edgeLabel, Edge<T> edge) {
+			this.outEdges.put(edgeLabel, edge);
 		}
 		
-		public Edge<T> getOutEdge(T edgeLabel){
+		public List<Edge<T>> getInEdgesList(){
+			List<Edge<T>> edges = new ArrayList<Edge<T>>(this.inEdges.values());
+			return edges;
+		}
+		
+		public List<Edge<T>> getOutEdgesList(){
+			List<Edge<T>> edges = new ArrayList<Edge<T>>(this.outEdges.values());
+			return edges;
+		}
+		
+		public Edge<T> getOutEdge(T edgeLabel) throws Exception{
 			if (!this.outEdges.containsKey(edgeLabel)) {
 				//TODO custom Exceptions?
 				throw new Exception("No such label: "+ nodeLabel );
@@ -79,7 +89,7 @@ public class Node<T> {
 			return edge;
 		}
 		
-		public Edge<T> getInEdge(T edgeLabel){
+		public Edge<T> getInEdge(T edgeLabel) throws Exception{
 			if (!this.inEdges.containsKey(edgeLabel)) {
 				//TODO custom Exceptions?
 				throw new Exception("No such label: "+ nodeLabel );
@@ -88,6 +98,13 @@ public class Node<T> {
 			return edge;
 		}
 		
+		public boolean hasInEdge(T edgeLabel) {
+			return this.inEdges.containsKey(edgeLabel);
+		}
+		
+		public boolean hasOutEdge(T edgeLabel) {
+			return this.outEdges.containsKey(edgeLabel);
+		}
 		
 		
 		

@@ -21,7 +21,12 @@ public class BipartiteGraphTest {
         driver.addWhiteNode("graph1", "n2");
         
         //add an edge
-        driver.addEdge("graph1", "n1", "n2", "edge");
+        try {
+			driver.addEdge("graph1", "n1", "n2", "edge");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         //check neighbors
         assertEquals("wrong black nodes", "n1", driver.listBlackNodes("graph1"));

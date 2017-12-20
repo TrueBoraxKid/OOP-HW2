@@ -45,8 +45,17 @@ public class Edge<T> {
 		private T childNodeLabel;
 		private T parentNodeLabel;
 		
-		public Edge(T edgeLable, T childLabel, T parentLabel){
-			
+		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @param childLabel
+		 * @param parentLabel
+		 */
+		public Edge (T edgeLabel, T childLabel, T parentLabel) {
+			this.childNodeLabel = childLabel;
+			this.parentNodeLabel = parentLabel;
+			this.edgeLabel = edgeLabel;
 		}
 		
 		public T getLabel(){
@@ -61,38 +70,39 @@ public class Edge<T> {
 			return this.parentNodeLabel;
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	
-	
 }
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+

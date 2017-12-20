@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class SimulatorTestDriver {
 
-	private Map<String, Simulator<String, Transaction>> simulators;
+	//private Map<String, Simulator<String, Transaction>> simulators;
 
 	/**
 	 * @modifies this
