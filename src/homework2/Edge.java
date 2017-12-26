@@ -19,8 +19,8 @@ package homework2;
 		- 
 		- user can: 
 			- create Graph by Label, init it empty 
-			- add nodes: label ------------------------------------------------ TODO: Are nodes generic? how to diff between white and black nodes
-			- add edges: label, childNode, parentNode ------------------------- TODO: Throw Exception when childNode and parentNode are same type
+			- add nodes: label ------------------------------------------------ 
+			- add edges: label, childNode, parentNode ------------------------- 
 			- getNodeInEdges  	by nodeLabel, returns list of labels
 			- getNodeOutEdges 	by nodeLabel, returns list of labels
 			- getNodeChildNodes by nodeLabel, returns list of labels
@@ -56,20 +56,40 @@ public class Edge<T> {
 			this.childNodeLabel = childLabel;
 			this.parentNodeLabel = parentLabel;
 			this.edgeLabel = edgeLabel;
+			
+			this.checkRep();
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public T getLabel(){
 			return this.edgeLabel;
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public T getChildNode(){
 				return this.childNodeLabel;
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public T getParentNode(){
 			return this.parentNodeLabel;
 		}
 		
+		
+		private void checkRep() {
+			//TODO implement checkRep
+		}
+		
+		//TODO override toString
 }
 		
 		

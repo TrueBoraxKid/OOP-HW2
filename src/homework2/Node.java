@@ -18,8 +18,8 @@ import java.util.*;
 		- 
 		- user can: 
 			- create Graph by Label, init it empty 
-			- add nodes: label ------------------------------------------------ TODO: Are nodes generic? how to diff between white and black nodes
-			- add edges: label, childNode, parentNode ------------------------- TODO: Throw Exception when childNode and parentNode are same type
+			- add nodes: label ------------------------------------------------ 
+			- add edges: label, childNode, parentNode ------------------------- 
 			- getNodeInEdges  	by nodeLabel, returns list of labels
 			- getNodeOutEdges 	by nodeLabel, returns list of labels
 			- getNodeChildNodes by nodeLabel, returns list of labels
@@ -44,71 +44,118 @@ public class Node<T> {
 		private Map <T, Edge<T>> inEdges;
 		private Map <T, Edge<T>> outEdges;
 		
-		
+		/**
+		 * 
+		 * @param nodeLabel
+		 * @param type
+		 */
 		public Node(T nodeLabel, int type){
-			this.nodeLabel = nodeLabel; // TODO clone?
-			if( type == 0) {
-				this.type = 0;
-			}else {
-				this.type = 1;
-			}
+			this.nodeLabel = nodeLabel;
+			this.type = (type == 0) ? 0:1;
 			
 			this.inEdges = new HashMap <T, Edge<T>>();
 			this.outEdges = new HashMap <T, Edge<T>>(); 
-			//TODO checkRep
+			
+			this.checkRep();
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public int getType() {
 			return this.type;
 		}
 		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @param edge
+		 */
 		public void addInEdge(T edgeLabel, Edge<T> edge) {
 			this.inEdges.put(edgeLabel, edge);
 		}
 		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @param edge
+		 */
 		public void addOutEdge(T edgeLabel, Edge<T> edge) {
 			this.outEdges.put(edgeLabel, edge);
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public List<Edge<T>> getInEdgesList(){
 			List<Edge<T>> edges = new ArrayList<Edge<T>>(this.inEdges.values());
 			return edges;
 		}
 		
+		/**
+		 * 
+		 * @return
+		 */
 		public List<Edge<T>> getOutEdgesList(){
 			List<Edge<T>> edges = new ArrayList<Edge<T>>(this.outEdges.values());
 			return edges;
 		}
 		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @return
+		 * @throws Exception
+		 */
 		public Edge<T> getOutEdge(T edgeLabel) throws Exception{
 			if (!this.outEdges.containsKey(edgeLabel)) {
 				//TODO custom Exceptions?
-				throw new Exception("No such label: "+ nodeLabel );
+				throw new Exception(this.nodeLabel + "has no such edge labeled: "+ edgeLabel );
 			}
 			Edge<T> edge = this.outEdges.get(edgeLabel);
 			return edge;
 		}
 		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @return
+		 * @throws Exception
+		 */
 		public Edge<T> getInEdge(T edgeLabel) throws Exception{
 			if (!this.inEdges.containsKey(edgeLabel)) {
 				//TODO custom Exceptions?
-				throw new Exception("No such label: "+ nodeLabel );
+				throw new Exception(this.nodeLabel + " has no edge labeled: "+ edgeLabel );
 			}
 			Edge<T> edge = this.inEdges.get(edgeLabel);
 			return edge;
 		}
 		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @return
+		 */
 		public boolean hasInEdge(T edgeLabel) {
 			return this.inEdges.containsKey(edgeLabel);
 		}
 		
+		/**
+		 * 
+		 * @param edgeLabel
+		 * @return
+		 */
 		public boolean hasOutEdge(T edgeLabel) {
 			return this.outEdges.containsKey(edgeLabel);
 		}
 		
+		private void checkRep() {
+			//TODO implement checkRep
+		}
 		
-		
-		
+		//TODO override toString
 		
 		
 		

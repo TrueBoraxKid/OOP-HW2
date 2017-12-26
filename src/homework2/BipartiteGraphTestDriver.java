@@ -202,5 +202,15 @@ public class BipartiteGraphTestDriver {
     	System.out.println(driver.listParents(graph1, "b1"));
     	System.out.println(driver.listParents(graph1, "w1"));
     	
+    	try {
+    		System.out.println(driver.getChildByEdgeLabel(graph1, "b1", "e1"));
+    		System.out.println(driver.getChildByEdgeLabel(graph1, "w1", "e2"));
+    		
+    		System.out.println(driver.getParentByEdgeLabel(graph1, "b1", "e2"));
+    		System.out.println(driver.getParentByEdgeLabel(graph1, "w1", "e1"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     } 
 }

@@ -29,7 +29,7 @@ import java.util.*;
 		- 
 		- user can: 
 			- create Graph by Label, init it empty 
-			- add nodes: label ------------------------------------------------ TODO: Are nodes generic? how to diff between white and black nodes
+			- add nodes: label ------------------------------------------------ 
 			- add edges: label, childNode, parentNode ------------------------- TODO: Throw Exception when childNode and parentNode are same type
 			- getNodeType
 			- getNodeInEdges  	by nodeLabel, returns list of labels
@@ -43,7 +43,7 @@ import java.util.*;
 			- 
 			- 
 			
-	- 
+	- TODO: equals for labels
 	- 
 	- 
 	- 
@@ -62,14 +62,13 @@ public class BipartiteGraph<T> {
 		public BipartiteGraph(){
 			this.nodes = new HashMap<T, Node<T>>();
 			//this.graphLabel = graphLabel; // TODO clone? copy constructor?
-			//TODO checkRep();
+
+			this.checkRep();
 			
 		}
 		
 		public BipartiteGraph(T graphLabel){
-			this.nodes = new HashMap<T, Node<T>>();
-			//this.graphLabel = graphLabel; // TODO clone? copy constructor?
-			//TODO checkRep();
+			this.nodes = new HashMap<T, Node<T>>();			
 		}
 		
 		
@@ -77,11 +76,11 @@ public class BipartiteGraph<T> {
 		 * 
 		 * @param nodeLabel
 		 * @param type
+		 * @throws Exception 
 		 */
-		public void addNode(T nodeLabel, int type){
+		public void addNode(T nodeLabel, int type) throws Exception{
 			if (this.nodes.containsKey(nodeLabel)) {
-				//TODO Throw exception
-				System.out.println("node labeled: " + nodeLabel + "already exists");
+				throw new Exception("node labeled: " + nodeLabel + "already exists");
 			}
 			
 			this.nodes.put(nodeLabel, new Node<T>(nodeLabel, type));
@@ -105,7 +104,11 @@ public class BipartiteGraph<T> {
 			Edge<T> edge = new Edge<T>(edgeLabel, childLabel, parentLabel);
 			
 			parent.addOutEdge(edgeLabel, edge);
+			child.addInEdge(edgeLabel, edge);
 		}
+		
+		
+		//TODO remove nodes and edges methods
 		
 		 /**
 		  * 
@@ -235,7 +238,7 @@ public class BipartiteGraph<T> {
 			return parent;
 		}
 		
-		//TODO Override toString
+		//TODO Override toString?
 		
 		private Node<T> getNodeByLabel(T nodeLabel) throws Exception {
 			if (!this.nodes.containsKey(nodeLabel)) {
@@ -247,7 +250,9 @@ public class BipartiteGraph<T> {
 			return node;
 		}
 		
-		
+		private void checkRep() {
+			//TODO implement checkRep
+		}
 		
 	
 }
