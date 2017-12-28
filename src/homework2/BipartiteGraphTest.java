@@ -10,7 +10,7 @@ import org.junit.Test;
 public class BipartiteGraphTest {
 
 	@Test
-    public void testExample() {
+    public void testExample() throws Exception {
         BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
         
         //create a graph
@@ -33,10 +33,9 @@ public class BipartiteGraphTest {
     }
     
     
-    //  TODO: Add black-box tests
     
 	@Test
-	public void test_simpleAddRemove() {
+	public void test_simpleAddRemove() throws Exception {
 		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
 		
 		final String graphName = "graph1";
@@ -57,25 +56,63 @@ public class BipartiteGraphTest {
 
         assertEquals("wrong children for b1", "w1", driver.listChildren(graphName, "b1"));
         assertEquals("wrong children for b2", "w2", driver.listChildren(graphName, "b2"));
+        
+        assertEquals("wrong children by edge for b1", "w1", driver.getChildByEdgeLabel(graphName, "b1", "e_b1w1"));
+        assertEquals("wrong children by edge for b2", "w2", driver.getChildByEdgeLabel(graphName, "b2", "e_b2w2"));
 
         assertEquals("wrong parent for w1", "b1", driver.listParents(graphName, "w1"));
         assertEquals("wrong parent for w2", "b2", driver.listParents(graphName, "w2"));
         
-        assertEquals("wrong parent for w2");
-        
-        
+        assertEquals("wrong parent by edge for w1","b1", driver.getParentByEdgeLabel(graphName, "w1", "e_b1w1"));
+        assertEquals("wrong parent by edge for w2","b2", driver.getParentByEdgeLabel(graphName, "w2", "e_b2w2"));
+     
 	}
 	
 	@Test(expected = Exception.class)
-	public void test_AddSameNode() {}
+	public void test_AddSameNode() throws Exception {
+		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();		
+		driver.createGraph("graph1");      
+		driver.addBlackNode("graph1", "b1");
+		driver.addBlackNode("graph1", "b1");
+		
+	}
 	
 	@Test(expected = Exception.class)
-	public void test_AddSameEdge() {}
+	public void test_AddSameEdge() throws Exception {
+		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();		
+		final String graphName = "graph1";
+		driver.createGraph("graph1");      
+		driver.addBlackNode("graph1", "b1");
+		driver.addWhiteNode("graph1", "w1");
+		driver.addWhiteNode("graph1", "w2");
+		driver.addEdge(graphName, "b1", "w1", "e_b1w1");
+		driver.addEdge(graphName, "b1", "w2", "e_b1w1");
+	}
 	
 	@Test(expected = Exception.class)
-	public void test_SearchNonexistentNode() {}
+	public void test_connectSameType() throws Exception {
+		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+		final String graphName = "graph1";
+		driver.createGraph(graphName);
+		driver.addWhiteNode(graphName, "w2");
+		driver.addWhiteNode(graphName, "w1");
+		driver.addEdge(graphName, "w2", "w1", "e_w1w2");
+	}
 	
 	@Test(expected = Exception.class)
-	public void test_SearchNonexistentEdge() {}
-  
+	public void test_SearchNonexistentNode() throws Exception {
+		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();		
+		final String graphName = "graph1";
+		driver.createGraph(graphName);
+		driver.addEdge(graphName, "b1", "w1", "e_b1w1");
+	}
+	
+	@Test(expected = Exception.class)
+	public void test_SearchNonexistentEdge() throws Exception {
+		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();		
+		final String graphName = "graph1";
+		driver.createGraph(graphName);
+		driver.addWhiteNode(graphName, "w2");
+		driver.getParentByEdgeLabel(graphName, "w2", "e_b2w2");
+	}
 }

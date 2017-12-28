@@ -2,81 +2,53 @@ package homework2;
 
 import java.util.*;
 
-//import static org.junit.Assert.*;
-//import org.junit.Test;
-
 /********************************************
 	
 	DATA MODEL:
+	
+	BipariteGraph represents labeled bipartite graph consisting of nodes and edges.
+	BipariteGraph provides access to nodes via public list* and get* methods
+	
 	- Graph has graphLabel object, which should be generic
 	- Graph has 2 types of nodes, black and white:  nodes and edges are stored in HashTable, key is the Label
-		- NODES: 
-			- Node has nodeLabel, generic
-			- Node has list of inEdges and outEdges, by generic labels
-			- Node has type: black or white
-			- Labels are unique
-	- Graph has edges, that connect the nodes:
-		- EDGES: 
-			- Edge has edgeLabel, generic
-			- Edge stores 2 labels, nodes it connects: childNode and parentNode
-			- 
-			- 
-			- 
-			- 
-	- USER CAN: 
-		- User has no access to data structures
-		- All interfacing by labels only
-		- 
-		- user can: 
-			- create Graph by Label, init it empty 
-			- add nodes: label ------------------------------------------------ 
-			- add edges: label, childNode, parentNode ------------------------- 
-			- getNodeType
-			- getNodeInEdges  	by nodeLabel, returns list of labels
-			- getNodeOutEdges 	by nodeLabel, returns list of labels
-			- getNodeChildNodes by nodeLabel, returns list of labels
-			- getNodeParentNodes by nodeLabel, returns list of labels
-			- getEdgeChildNodes	 by edgeLabel, returns label	
-			- 
-			- 
-			- resetGraph
-			- 
-			- 
-			
-	- 
-	- 
-	- 
-	- 
-	*********************************************/	
+	- Graph has edges, that connect the nodes			-  
+*********************************************/	
 
+// Abstraction Function:
+//		BipariteGraph represents labeled bipartite graph consisting of nodes and edges.
+//		All graph nodes can be accessed via child-parent relation and graph can be traversed
+//			
+//
+
+// Representation Invariant:
+//		- all graph nodes are labeled with non-null label of type T
+//		- if there exists some edge e1 from some node1 to some node2 than node1 and node2 are guaranteed of different types  	 
+//		- if there exists some node1 with out-bound edge e1 than guaranteed existance of some node2 with in-bound edge e1 and vice versa
+	
 public class BipartiteGraph<T> {
 		
 		private Map<T, Node<T>> nodes;
-		//private T graphLabel;
 		
 		/**
-		 * 
-		 * @param graphLabel
+		 * @effects creates new empty graph driver instance
 		 */
 		public BipartiteGraph(){
 			this.nodes = new HashMap<T, Node<T>>();
-
-			this.checkRep();
-			
+			this.checkRep();	
 		}
-		
-		public BipartiteGraph(T graphLabel){
-			this.nodes = new HashMap<T, Node<T>>();			
-		}
-		
 		
 		/**
-		 * 
+		 * @requires nodeLabel != null && type > = 0
+		 * @effects add new node of the type to the graph 
+		 * @modifies this
 		 * @param nodeLabel
 		 * @param type
-		 * @throws Exception 
+		 * @throws Exception
 		 */
 		public void addNode(T nodeLabel, int type) throws Exception{
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
+			if(type < 0) throw new IllegalArgumentException("type must be positive integer");
+			
 			if (this.nodes.containsKey(nodeLabel)) {
 				throw new Exception("node labeled: " + nodeLabel + "already exists");
 			}
@@ -86,13 +58,20 @@ public class BipartiteGraph<T> {
 		}
 		
 		/**
-		 * 
+		 * @requires 	parentLabel !=null && edgeLabel !=null && childLabel != null
+		 * 				&& parent node, child node and edge were added to the graph prior to this call
+		 * @effects		add new edge from parentLabel to childLabel 
+		 * @modifies this	
 		 * @param edgeLabel
 		 * @param childLabel
 		 * @param parentLabel
-		 * @throws Exception 
-		 */	
+		 * @throws Exception
+		 */
 		public void addEdge(T edgeLabel, T childLabel, T parentLabel) throws Exception{
+			if(parentLabel == null) throw new NullPointerException("parentLabel is null");
+			if(childLabel == null) throw new NullPointerException("childLabel is null");
+			if(edgeLabel == null) throw new NullPointerException("edgeLabel is null");
+			
 			Node<T> parent	= this.getNodeByLabel(parentLabel);
 			Node<T> child 	= this.getNodeByLabel(childLabel);
 			
@@ -108,11 +87,13 @@ public class BipartiteGraph<T> {
 		
 		
 		/**
-		 * 
+		 * @requires nodeLabel !=null && edgeLabel !=null and node was added to the graph prior to this call
+		 * @effects remove given node from the graph
 		 * @param nodeLabel
 		 * @throws Exception
 		 */
 		public void removeNode(T nodeLabel) throws Exception {
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.getNodeByLabel(nodeLabel);
 			List<Edge<T>> inEdges = node.getInEdgesList();
 			List<Edge<T>> outEdges = node.getOutEdgesList();
@@ -128,9 +109,13 @@ public class BipartiteGraph<T> {
 		 * 
 		 * @param parentLabel
 		 * @param edgeLabel
+		 * @requires parentLabel !=null && edgeLabel !=null and both parent node and edge were added to the graph prior to this call
+		 * @effects remove given edge from the graph
 		 * @throws Exception
 		 */
 		public void removeEdge(T parentLabel, T edgeLabel) throws Exception {
+			if(parentLabel == null) throw new NullPointerException("parentLabel is null");
+			if(edgeLabel == null) throw new NullPointerException("edgeLabel is null");
 			Node<T> parentNode = this.getNodeByLabel(parentLabel);
 			Edge<T> edge  = parentNode.getOutEdge(edgeLabel);
 			Node<T> childNode = this.getNodeByLabel(edge.getChildNode());
@@ -138,9 +123,10 @@ public class BipartiteGraph<T> {
 			childNode.removeInEdge(edgeLabel);
 			parentNode.removeOutEdge(edgeLabel);
 		}
+		
 		 /**
 		  * 
-		  * @return List<T> of labels for all nodes in the graph
+		  * @return list of all nodes in the graph
 		  */
 		public List<T> getNodes(){
 			Set<T> keySet 	= this.nodes.keySet();
@@ -152,9 +138,11 @@ public class BipartiteGraph<T> {
 		/**
 		 * 
 		 * @param type
-		 * @return List of labels of nodes filtered by type
+		 * @requires type !=null && type >= 0
+		 * @return list of all nodes of the type that exist in the graph
 		 */
 		public List<T> getNodesByType(int type){
+			if(type < 0) throw new IllegalArgumentException("type must be positive integer");
 			Set<T> keySet 	= this.nodes.keySet();
 			List<T> keyList = new ArrayList<T>(keySet);
 			
@@ -170,10 +158,12 @@ public class BipartiteGraph<T> {
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return
+		 * @requires nodeLabel !=null && node was added to the graph prior to this call
+		 * @return integer type of the requested node
 		 * @throws Exception
 		 */
 		public int getNodeType(T nodeLabel) throws Exception {
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.getNodeByLabel(nodeLabel);
 			return node.getType();
 		}
@@ -182,10 +172,12 @@ public class BipartiteGraph<T> {
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return
-		 * @throws Exception 
+		 * @requires nodeLabel !=null && node was added to the graph prior to this call
+		 * @return list of all in-bound edges for given node
+		 * @throws Exception
 		 */
 		public List<T> getNodeInEdges		(T nodeLabel) throws Exception{
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.getNodeByLabel(nodeLabel);
 			List<Edge<T>> inEdges = node.getInEdgesList();
 			List<T> edges = new ArrayList<T>();
@@ -198,10 +190,12 @@ public class BipartiteGraph<T> {
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return
-		 * @throws Exception 
+		 * @requires nodeLabel !=null && node was added to the graph prior to this call
+		 * @return list of all out-bound edges for given node
+		 * @throws Exception
 		 */
 		public List<T> getNodeOutEdges		(T nodeLabel) throws Exception{
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.getNodeByLabel(nodeLabel);
 			List<Edge<T>> outEdges = node.getOutEdgesList();
 			List<T> edges = new ArrayList<T>();
@@ -214,9 +208,11 @@ public class BipartiteGraph<T> {
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return List of all immediate children for nodeLabel.
+		 * @requires nodeLabel != null && node was added to the graph prior to this call
+		 * @return list of all child nodes for given node
 		 */
 		public List<T> getNodeChildren	(T nodeLabel){
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.nodes.get(nodeLabel);
 			List<T> children = new ArrayList<T>();
 			for ( Edge<T> edge: node.getOutEdgesList()) {				
@@ -228,9 +224,11 @@ public class BipartiteGraph<T> {
 		/**
 		 * 
 		 * @param nodeLabel
-		 * @return List of all immediate parents for nodeLabel
+		 * @requires nodeLabel !=null && node was added to the graph prior to this call
+		 * @return list of all parent nodes for given node
 		 */
 		public List<T> getNodeParents	(T nodeLabel){
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.nodes.get(nodeLabel);
 			List<T> parents = new ArrayList<T>();
 			for ( Edge<T> edge: node.getInEdgesList()) {				
@@ -241,11 +239,15 @@ public class BipartiteGraph<T> {
 		
 		/**
 		 * 
+		 * @param parentLabel
 		 * @param edgeLabel
-		 * @return
-		 * @throws Exception 
+		 * @requires parentLabel !=null && edgeLabel !=null and both parent node and edge were added to the graph prior to this call
+		 * @return label of the child node for given edge
+		 * @throws Exception
 		 */
 		public T getEdgeChildNode	(T parentLabel, T edgeLabel) throws Exception{
+			if(parentLabel == null) throw new NullPointerException("parentLabel is null");
+			if(edgeLabel == null) throw new NullPointerException("edgeLabel is null");
 			Node<T> node = this.getNodeByLabel(parentLabel);
 			Edge<T> edge = node.getOutEdge(edgeLabel);
 			T child = edge.getChildNode();
@@ -254,11 +256,15 @@ public class BipartiteGraph<T> {
 		
 		/**
 		 * 
+		 * @param childLabel
 		 * @param edgeLabel
-		 * @return
-		 * @throws Exception 
-		*/
+		 * @requires childLabel !=null && edgeLabel !=null and both child node and edge were added to the graph prior to this call
+		 * @return label of the parent node for given edge
+		 * @throws Exception
+		 */
 		public T getEdgeParentNode	(T childLabel, T edgeLabel) throws Exception{
+			if(childLabel == null) throw new NullPointerException("childLabel is null");
+			if(edgeLabel == null) throw new NullPointerException("edgeLabel is null");
 			Node<T> node = this.getNodeByLabel(childLabel);
 			Edge<T> edge = node.getInEdge(edgeLabel);
 			T parent = edge.getParentNode();
@@ -267,8 +273,8 @@ public class BipartiteGraph<T> {
 		
 		
 		private Node<T> getNodeByLabel(T nodeLabel) throws Exception {
+			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			if (!this.nodes.containsKey(nodeLabel)) {
-				//TODO custom Exceptions?
 				throw new Exception("No such label: "+ nodeLabel );
 			}
 			

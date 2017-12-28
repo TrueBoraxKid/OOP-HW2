@@ -1,43 +1,13 @@
 package homework2;
 
-//import static org.junit.Assert.*;
-//import org.junit.Test;
-
-/********************************************
-	
-
-		- EDGES: 
-			- Edge has edgeLabel, generic
-			- Edge stores 2 labels, nodes it connects: childNode and parentNode
-			- 
-			- 
-			- 
-			- 
-	- USER CAN: 
-		- User has no access to data structures
-		- All interfacing by lables only
-		- 
-		- user can: 
-			- create Graph by Label, init it empty 
-			- add nodes: label ------------------------------------------------ 
-			- add edges: label, childNode, parentNode ------------------------- 
-			- getNodeInEdges  	by nodeLabel, returns list of labels
-			- getNodeOutEdges 	by nodeLabel, returns list of labels
-			- getNodeChildNodes by nodeLabel, returns list of labels
-			- getNodeParentNodes by nodeLabel, returns list of labels
-			- getEdgeChildNodes	 by edgeLabel, returns list of labels	
-			- getEdgeParentNodes by edgeLabel, returns list of labels
-			- 
-			- resetGraph
-			- 
-			- 
-			
-	- 
-	- 
-	- 
-	- 
-	- 
-	*********************************************/	
+/************************************
+ * 
+ * 		- EDGES:
+ * 			Edge represents graph edge between two nodes. 
+ *  
+ *			- Edge has edgeLabel, generic
+ *			- Edge stores 2 labels, nodes it connects: childNode and parentNode
+ */
 
 public class Edge<T> {
 		
@@ -51,6 +21,7 @@ public class Edge<T> {
 		 * @param edgeLabel
 		 * @param childLabel
 		 * @param parentLabel
+		 * @effects creates new edge from parentLabel to childLabel
 		 */
 		public Edge (T edgeLabel, T childLabel, T parentLabel) {
 			this.childNodeLabel = childLabel;
@@ -60,9 +31,14 @@ public class Edge<T> {
 			this.checkRep();
 		}
 		
+		 private void checkRep() {
+			assert edgeLabel != null : "label cannot be null";
+			assert childNodeLabel != null : "label cannot be null";
+		    assert parentNodeLabel != null : "label cannot be null";
+		}
 		/**
 		 * 
-		 * @return
+		 * @return label of this
 		 */
 		public T getLabel(){
 			return this.edgeLabel;
@@ -70,7 +46,7 @@ public class Edge<T> {
 		
 		/**
 		 * 
-		 * @return
+		 * @return label of the child node for this
 		 */
 		public T getChildNode(){
 				return this.childNodeLabel;
@@ -78,22 +54,12 @@ public class Edge<T> {
 		
 		/**
 		 * 
-		 * @return
+		 * @return label of the parent node for this
 		 */
 		public T getParentNode(){
 			return this.parentNodeLabel;
 		}
-		
-		
-		private void checkRep() {
-			//TODO implement checkRep
-		}
-		
-		//TODO override toString
 }
-		
-		
-		
 		
 		
 		
