@@ -30,7 +30,7 @@ import java.util.*;
 		- user can: 
 			- create Graph by Label, init it empty 
 			- add nodes: label ------------------------------------------------ 
-			- add edges: label, childNode, parentNode ------------------------- TODO: Throw Exception when childNode and parentNode are same type
+			- add edges: label, childNode, parentNode ------------------------- 
 			- getNodeType
 			- getNodeInEdges  	by nodeLabel, returns list of labels
 			- getNodeOutEdges 	by nodeLabel, returns list of labels
@@ -43,7 +43,6 @@ import java.util.*;
 			- 
 			- 
 			
-	- TODO: equals for labels
 	- 
 	- 
 	- 
@@ -61,7 +60,6 @@ public class BipartiteGraph<T> {
 		 */
 		public BipartiteGraph(){
 			this.nodes = new HashMap<T, Node<T>>();
-			//this.graphLabel = graphLabel; // TODO clone? copy constructor?
 
 			this.checkRep();
 			
@@ -108,8 +106,38 @@ public class BipartiteGraph<T> {
 		}
 		
 		
-		//TODO remove nodes and edges methods
 		
+		/**
+		 * 
+		 * @param nodeLabel
+		 * @throws Exception
+		 */
+		public void removeNode(T nodeLabel) throws Exception {
+			Node<T> node = this.getNodeByLabel(nodeLabel);
+			List<Edge<T>> inEdges = node.getInEdgesList();
+			List<Edge<T>> outEdges = node.getOutEdgesList();
+			
+			for(Edge<T> edge: inEdges)  node.removeInEdge(edge.getLabel());
+			for(Edge<T> edge: outEdges) node.removeOutEdge(edge.getLabel());
+			
+			this.nodes.remove(nodeLabel);
+		}
+		
+		
+		/**
+		 * 
+		 * @param parentLabel
+		 * @param edgeLabel
+		 * @throws Exception
+		 */
+		public void removeEdge(T parentLabel, T edgeLabel) throws Exception {
+			Node<T> parentNode = this.getNodeByLabel(parentLabel);
+			Edge<T> edge  = parentNode.getOutEdge(edgeLabel);
+			Node<T> childNode = this.getNodeByLabel(edge.getChildNode());
+	
+			childNode.removeInEdge(edgeLabel);
+			parentNode.removeOutEdge(edgeLabel);
+		}
 		 /**
 		  * 
 		  * @return List<T> of labels for all nodes in the graph
@@ -146,7 +174,6 @@ public class BipartiteGraph<T> {
 		 * @throws Exception
 		 */
 		public int getNodeType(T nodeLabel) throws Exception {
-			
 			Node<T> node = this.getNodeByLabel(nodeLabel);
 			return node.getType();
 		}
@@ -238,7 +265,6 @@ public class BipartiteGraph<T> {
 			return parent;
 		}
 		
-		//TODO Override toString?
 		
 		private Node<T> getNodeByLabel(T nodeLabel) throws Exception {
 			if (!this.nodes.containsKey(nodeLabel)) {

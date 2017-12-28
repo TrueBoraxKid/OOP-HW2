@@ -48,7 +48,11 @@ public class BipartiteGraphTestDriver {
     public void addBlackNode(String graphName, String nodeName) {
     	// TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
-    	graph.addNode(nodeName, 0);    	
+    	try{
+    		graph.addNode(nodeName, 0);    	
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
     
@@ -65,12 +69,16 @@ public class BipartiteGraphTestDriver {
     public void addWhiteNode(String graphName, String nodeName) {
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
-    	graph.addNode(nodeName, 1);
+    	try {
+			graph.addNode(nodeName, 1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     
     /**
-     * @throws Exception 
      * @requires createGraph(graphName)
      *           && ((addBlackNode(parentName) && addWhiteNode(childName))
      *              || (addWhiteNode(parentName) && addBlackNode(childName)))
@@ -86,10 +94,14 @@ public class BipartiteGraphTestDriver {
      */
     public void addEdge(String graphName,
     					String parentName, String childName, 
-                        String edgeLabel) throws Exception {
+                        String edgeLabel){
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
-    	graph.addEdge(edgeLabel, childName, parentName);    	
+    	try {
+			graph.addEdge(edgeLabel, childName, parentName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}    	
     }
 	
     
@@ -102,7 +114,8 @@ public class BipartiteGraphTestDriver {
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
     	List<String> nodes = graph.getNodesByType(0);
-    	return nodes.toString();
+    	Collections.sort(nodes);
+    	return this.listToString(nodes);
     }
 
     
@@ -115,7 +128,8 @@ public class BipartiteGraphTestDriver {
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
     	List<String> nodes = graph.getNodesByType(1);
-    	return nodes.toString();    	
+    	Collections.sort(nodes);
+    	return this.listToString(nodes);	
     }
 
     
@@ -127,9 +141,10 @@ public class BipartiteGraphTestDriver {
     public String listChildren(String graphName, String parentName) {
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
-    	List<String> parent = new ArrayList<String>(); 
-    	parent = graph.getNodeChildren(parentName);
-    	return parent.toString();
+    	List<String> child = new ArrayList<String>(); 
+    	child = graph.getNodeChildren(parentName);
+    	Collections.sort(child);
+    	return this.listToString(child);
     }
 
     
@@ -143,7 +158,8 @@ public class BipartiteGraphTestDriver {
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
     	List<String> parent = new ArrayList<String>(); 
     	parent = graph.getNodeParents(childName);
-    	return parent.toString();
+    	Collections.sort(parent);
+    	return this.listToString(parent);
     	
     }
 
@@ -156,10 +172,16 @@ public class BipartiteGraphTestDriver {
      * @throws Exception 
      */
     public String getChildByEdgeLabel(String graphName, String parentName,
-    								   String edgeLabel) throws Exception {
+    								   String edgeLabel){
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
-    	return graph.getEdgeChildNode(parentName, edgeLabel);
+    	String child = null;
+    	try {
+			child = graph.getEdgeChildNode(parentName, edgeLabel);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+    	return child;
     }
 
     
@@ -171,46 +193,60 @@ public class BipartiteGraphTestDriver {
      * @throws Exception 
      */
     public String getParentByEdgeLabel(String graphName, String childName,
-    									String edgeLabel) throws Exception {
+    									String edgeLabel){
     	//TODO: Implement this method
     	BipartiteGraph<String> graph = this.graphs.get(graphName);
-    	return graph.getEdgeParentNode(childName, edgeLabel);
+    	String parent = null;
+		try {
+			parent = graph.getEdgeParentNode(childName, edgeLabel);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+    	return parent;
     }
     
-    
-    public static void main(String[] args) {
-    	BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
-    	
-    	String graph1 = "graph1";
-    	
-    	driver.createGraph(graph1);
-    	driver.addWhiteNode(graph1, "w1");
-    	driver.addBlackNode(graph1, "b1");
-    	System.out.println(driver.listBlackNodes(graph1));
-    	System.out.println(driver.listWhiteNodes(graph1));
-    	
-    	try {
-    		driver.addEdge(graph1, "b1", "w1" , "e1");
-    		driver.addEdge(graph1, "w1", "b1" , "e2");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    	
-    	System.out.println(driver.listChildren(graph1, "b1"));
-    	System.out.println(driver.listChildren(graph1, "w1"));
-    	System.out.println(driver.listParents(graph1, "b1"));
-    	System.out.println(driver.listParents(graph1, "w1"));
-    	
-    	try {
-    		System.out.println(driver.getChildByEdgeLabel(graph1, "b1", "e1"));
-    		System.out.println(driver.getChildByEdgeLabel(graph1, "w1", "e2"));
-    		
-    		System.out.println(driver.getParentByEdgeLabel(graph1, "b1", "e2"));
-    		System.out.println(driver.getParentByEdgeLabel(graph1, "w1", "e1"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    } 
+    private String listToString(List<String> list) {
+    	StringJoiner joiner = new StringJoiner(" ");
+    	for (String value : list) {
+    	    joiner.add(value);
+    	}
+    	return joiner.toString();
+    }
+//    
+//    public static void main(String[] args) {
+//    	BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+//    	
+//    	String graph1 = "graph1";
+//    	
+//    	driver.createGraph(graph1);
+//    	driver.addWhiteNode(graph1, "w1");
+//    	driver.addBlackNode(graph1, "b1");
+//    	System.out.println(driver.listBlackNodes(graph1));
+//    	System.out.println(driver.listWhiteNodes(graph1));
+//    	
+//    	try {
+//    		driver.addEdge(graph1, "b1", "w1" , "e1");
+//    		driver.addEdge(graph1, "w1", "b1" , "e2");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    	
+//    	System.out.println(driver.listChildren(graph1, "b1"));
+//    	System.out.println(driver.listChildren(graph1, "w1"));
+//    	System.out.println(driver.listParents(graph1, "b1"));
+//    	System.out.println(driver.listParents(graph1, "w1"));
+//    	
+//    	try {
+//    		System.out.println(driver.getChildByEdgeLabel(graph1, "b1", "e1"));
+//    		System.out.println(driver.getChildByEdgeLabel(graph1, "w1", "e2"));
+//    		
+//    		System.out.println(driver.getParentByEdgeLabel(graph1, "b1", "e2"));
+//    		System.out.println(driver.getParentByEdgeLabel(graph1, "w1", "e1"));
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    } 
 }

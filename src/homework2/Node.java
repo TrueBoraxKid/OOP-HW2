@@ -67,6 +67,9 @@ public class Node<T> {
 			return this.type;
 		}
 		
+		public T getLabel() {
+			return this.nodeLabel;
+		}
 		/**
 		 * 
 		 * @param edgeLabel
@@ -155,7 +158,19 @@ public class Node<T> {
 			//TODO implement checkRep
 		}
 		
-		//TODO override toString
+		public void removeInEdge(T edgeLabel) throws Exception {
+			if(this.hasInEdge(edgeLabel)) {
+				this.inEdges.remove(edgeLabel);
+			}
+			else throw new Exception(this.nodeLabel + " has no edge labeled: "+ edgeLabel );
+		}
+		
+		public void removeOutEdge(T edgeLabel) throws Exception {
+			if(this.hasOutEdge(edgeLabel)) {
+				this.outEdges.remove(edgeLabel);
+			}
+			else throw new Exception(this.nodeLabel + " has no edge labeled: "+ edgeLabel );
+		}
 		
 		
 		
