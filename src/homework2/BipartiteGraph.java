@@ -162,7 +162,7 @@ public class BipartiteGraph<T> {
 		 * @return integer type of the requested node
 		 * @throws Exception
 		 */
-		public int getNodeType(T nodeLabel) throws Exception {
+			throws Exception {
 			if(nodeLabel == null) throw new NullPointerException("nodeLabel is null");
 			Node<T> node = this.getNodeByLabel(nodeLabel);
 			return node.getType();
@@ -283,7 +283,7 @@ public class BipartiteGraph<T> {
 		}
 		
 		private void checkRep() {
-			//TODO implement checkRep
+			assert nodes != null : "nodes hash table is not initialized. should never happen"
 		}
 		
 	

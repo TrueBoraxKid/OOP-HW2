@@ -35,7 +35,7 @@ public class BipartiteGraphTest {
     
     
 	@Test
-	public void test_simpleAddRemove() throws Exception {
+	public void test_AddRemove() throws Exception {
 		BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
 		
 		final String graphName = "graph1";
